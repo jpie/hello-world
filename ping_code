@@ -1,0 +1,35 @@
+var ping = require('jjg-ping');
+
+var host ='reddit.com'
+// Enter the URL here.
+
+
+setInterval(function() {
+
+	ping.system.ping(host, function(latency, status) {
+	    if (status) {
+	        // Host is reachable/up. Latency should have a value.
+	        console.log(host + ' is online (' + latency + ' ms ping).');
+	        up = true;
+	    }
+	    else {
+	        // Host is down. Latency should be 0.
+	        console.log(host + ' is down.');
+	        up = false;
+	    }
+	});
+		var date = new Date();
+		var current_hour = date.getHours();
+		var current_minute = date.getMinutes();
+		var current_second = date.getSeconds();
+		var current_month = date.getMonth();
+		var current_day = date.getDate();
+		//var current_year = date.getYear();
+		var time = current_hour + ':' + current_minute + '.'+ current_second;
+		var d = current_month + '/' + current_day;
+		console.log('Date: ' + d + '\r\n' + 'Time: ' + time);
+
+ }, 3000 //3 second refresh interval
+ );
+
+
