@@ -1,0 +1,50 @@
+var ping = require('jjg-ping');
+var pg = require("pg");
+
+var host ='reddit.com'
+// Enter the URL here.
+
+var conString = "pg://justinpierce:@localhost:5431/mydb";
+
+var client = new pg.Client(conString);
+client.connect();
+
+
+setInterval(function() {
+	
+var up;
+
+	ping.system.ping(host, function(latency, status) {
+		latency = latency * .001;
+	    if (status) {
+	        // Host is reachable/up. Latency should have a value.
+	        up = "online";
+	        console.log(host + ' is ' + up + ' (' + latency + ' ms ping).');
+	    }
+	    else {
+	        // Host is down. Latency should be 0.
+	       up = "offline"; 
+	       console.log(host + ' is ' + up +'.');
+	    }
+	
+		var date = new Date();
+		var current_hour = date.getHours();
+		var current_minute = date.getMinutes();
+		var current_second = date.getSeconds();
+		var current_month = date.getMonth();
+		var current_day = date.getDate();
+		var current_year = date.getFullYear();
+
+		var time = current_hour + ':' + current_minute + ':'+ current_second;
+		var d = current_month + '/' + current_day + '/' + current_year;
+		console.log('Date: ' + d + '\r\n' + 'Time: ' + time);
+
+		//client.query("INSERT INTO host(name) values($1)", [host]);
+		client.query("INSERT INTO uptime(date, time, latency, status) values($1, $2, $3, $4)", [d, time, latency, up]);
+			//These commands insert the data displayed in the console into the given table of the database.
+	});
+		
+ }, 3000
+ );
+
+
